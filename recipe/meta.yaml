@@ -1,5 +1,5 @@
 {% set versions = {
-    "0.0.0": "REPLACE_WITH_SHA256"
+    "3.0.3": "REPLACE_WITH_SHA256"
 } %}
 
 {% set version = environ.get('COMMIT_VERSION', None) %}
@@ -13,7 +13,7 @@ package:
   version: {{ environ.get('ANACONDA_VERSION', version)|replace("-", ".") }}
 
 source:
-  url: "https://github.com/gudrunhe/gosam/archive/refs/tags/{{ version }}.tar.gz"   # TODO: confirm upstream's actual tag/tarball naming
+  url: "https://github.com/gudrunhe/gosam/archive/refs/tags/v{{ version }}.tar.gz"
   {% if versions.get(version, None) %}
   sha256: {{ versions.get(version) }}
   {% endif %}
@@ -27,13 +27,16 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ compiler('gfortran') }}
     - {{ stdlib('c') }}
-    - cmake
     - make
   host:
-    # TODO: library dependencies
+    # TODO: GoSam needs FORM, QGraf, and Python (with a golem95/samurai/ninja
+    # reduction backend) -- FORM/QGraf availability on conda-forge needs
+    # checking before this can build; golem95/samurai are blocked upstream
+    # (see eic-stack-roadmap memory), so ninja-hep-ph is the likely reduction
+    # backend to wire in here.
   run:
-    # TODO: runtime dependencies
 
 test:
   commands:
