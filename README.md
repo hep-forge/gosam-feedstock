@@ -11,6 +11,11 @@ Builds linux-amd64 + linux-arm64 in one matrix workflow and uploads to the
 
 GoSam: automated one-loop matrix element generation for BSM/SM amplitudes
 
+## Architectures
+
+State per architecture: see the platforms badge above or [anaconda.org/hep-forge/gosam](https://anaconda.org/hep-forge/gosam).
+
+
 ## Install
 
 ```bash
@@ -20,3 +25,4 @@ conda install -c hep-forge -c conda-forge gosam
 ## Maintainers
 
 * [@meiyasan](https://github.com/meiyasan/)
+
