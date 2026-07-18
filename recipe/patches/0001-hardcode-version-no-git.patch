@@ -1,0 +1,17 @@
+--- a/meson.build	2026-07-18 17:01:05.615200083 +0900
++++ b/meson.build	2026-07-18 17:01:05.639200063 +0900
+@@ -1,7 +1,13 @@
+ project('GoSam',
+     'fortran',
+     'cpp',
+-    version: '3.0.3-' + run_command(find_program('git'), 'rev-parse', '--short=7', 'HEAD', capture: true, check: true).stdout().strip(),
++    # Upstream derives the version suffix from `git rev-parse`, which
++    # requires a .git directory -- not present when building from a
++    # plain release tarball (conda-build's source fetch). Keep the
++    # hyphen: src/python/golem/meson.build's VCS_TAG derivation does
++    # meson.project_version().split('-')[1], which would IndexError
++    # without one.
++    version: '3.0.3-release',
+     default_options: {
+         'buildtype': 'release',
+         'bindir': get_option('bindir') + '/GoSam',

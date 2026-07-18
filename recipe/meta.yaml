@@ -1,5 +1,5 @@
 {% set versions = {
-    "3.0.3": "REPLACE_WITH_SHA256"
+    "3.0.3": "beb8693cf4a1bdcea9a7fd18ed2883a468166aeee0f3dacf11eb238de070ec0c"
 } %}
 
 {% set version = environ.get('COMMIT_VERSION', None) %}
@@ -17,9 +17,19 @@ source:
   {% if versions.get(version, None) %}
   sha256: {{ versions.get(version) }}
   {% endif %}
+  patches:
+    - patches/0001-hardcode-version-no-git.patch
 
 build:
   number: 0
+  # QGraf (github.com/gudrunhe/gosam subprojects/qgraf.wrap, fetched from
+  # qgraf.ist.utl.pt's own documented stable/automated-download URL) is
+  # copyrighted, academic-research-use-only software whose license
+  # explicitly requires the author's permission to redistribute. hep-forge
+  # publishes this build with that understanding -- see the root-plus
+  # session's chat log (2026-07-18) for the license text and the decision
+  # to proceed. Not a general-purpose OSS redistribution precedent for
+  # other packages.
   run_exports:
     - {{ pin_subpackage(name, max_pin="x.x.x") }}
 
@@ -27,25 +37,40 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('gfortran') }}
+    - {{ compiler('fortran') }}
     - {{ stdlib('c') }}
+    - meson
+    - ninja
+    - pkg-config
+    - git
     - make
   host:
-    # TODO: GoSam needs FORM, QGraf, and Python (with a golem95/samurai/ninja
-    # reduction backend) -- FORM/QGraf availability on conda-forge needs
-    # checking before this can build; golem95/samurai are blocked upstream
-    # (see eic-stack-roadmap memory), so ninja-hep-ph is the likely reduction
-    # backend to wire in here.
+    # GoSam's own meson build vendors its real dependencies (QGraf, FORM,
+    # the Ninja tensor-reduction library, AvH OneLoop) via meson
+    # subprojects/*.wrap -- fetched and built automatically at build time,
+    # not needed as pre-installed packages. golem95 is left off (its own
+    # option defaults false upstream; also blocked here per
+    # eic-stack-roadmap memory).
+    - python >=3.9
   run:
+    - python >=3.9
 
 test:
   commands:
-    - echo "TODO: a real smoke test"
+    - gosam.py --help
 
 about:
   home: "https://github.com/gudrunhe/gosam"
+  dev_url: "https://github.com/gudrunhe/gosam"
   license: "GPL-3.0-or-later"
   summary: "GoSam: automated one-loop matrix element generation for BSM/SM amplitudes"
+  description: |
+    GoSam automatically generates one-loop QCD/EW matrix elements for
+    Standard Model and BSM processes. This build vendors its real
+    dependencies (QGraf, FORM, the Ninja reduction library, AvH OneLoop)
+    via GoSam's own meson subproject wraps rather than pre-installed
+    packages -- see the build: comment above regarding QGraf's
+    redistribution license.
 
 extra:
   recipe-maintainers:
