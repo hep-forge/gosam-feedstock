@@ -51,9 +51,12 @@ requirements:
     # not needed as pre-installed packages. golem95 is left off (its own
     # option defaults false upstream; also blocked here per
     # eic-stack-roadmap memory).
-    - python >=3.9
+    # bare, not "python >=3.9": conda-build applies the python variant of
+    # conda_build_config.yaml only to an unconstrained spec, and otherwise
+    # takes the newest Python (3.15 on 2026-11-01).
+    - python
   run:
-    - python >=3.9
+    - python
 
 test:
   commands:
