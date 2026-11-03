@@ -18,6 +18,14 @@ meson setup builddir \
   --buildtype=release \
   -Dquadninja=${QUADNINJA}
 
+# Ninja's tarball has a plain-text file called `version` at its top, which
+# meson puts on the include path. On macOS's case-insensitive filesystem it
+# then stands in for libc++'s <version> header and nothing compiles. The
+# build (subprojects/packagefiles/ninja/meson.build) never reads it.
+if [[ "$(uname)" == "Darwin" ]]; then
+  rm -f subprojects/ninja-*/version
+fi
+
 meson compile -C builddir
 
 meson install -C builddir
