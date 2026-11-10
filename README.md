@@ -13,12 +13,7 @@ GoSam: automated one-loop matrix element generation for BSM/SM amplitudes
 
 ## Architectures
 
-| Architecture | Latest published |
-|--------------|------------------|
-| linux-amd64 (`linux-64`) | ✅ `3.0.3` |
-| linux-arm64 (`linux-aarch64`) | ✅ `3.0.3` |
-
-_As of the last feedstock render; the badges above are live._
+State per architecture: see the platforms badge above or [anaconda.org/hep-forge/gosam](https://anaconda.org/hep-forge/gosam).
 
 
 ## Install
